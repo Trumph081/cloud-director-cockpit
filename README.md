@@ -35,25 +35,15 @@ Abre http://localhost:8000/ desde ese equipo. Si intentas abrir `index.html` com
 
 La demo guarda información **solo en el navegador y dispositivo utilizado**. Para usar los mismos datos en iPhone y PC, activa Supabase.
 
-## 3. Activar Supabase para sincronizar
+## 3. Acceso con correo y contraseña
 
-1. Crea un proyecto en Supabase.
-2. Abre **SQL Editor** y ejecuta `supabase-schema.sql` (crea solo dos tablas: `opportunities`, `projects`, ambas con RLS).
-3. En Authentication habilita un mecanismo de acceso por email OTP/magic link. Configura **Site URL** y **Redirect URLs** con la URL exacta publicada en GitHub Pages (incluyendo la ruta del repositorio). Para una herramienta personal, limita los registros nuevos desde Authentication.
-4. Edita `config.js`:
+1. Ejecuta `supabase-schema.sql` en Supabase SQL Editor (si no lo hiciste ya).
+2. En Supabase > Authentication > Users crea un usuario mediante **Add user > Create new user**, con tu email y una contraseña segura, y activa **Auto Confirm User**. Si ya existe ese email, no crees una segunda cuenta: utiliza otro email nuevo, o configura contraseña del existente desde un método administrativo autorizado.
+3. En Authentication > Providers > Email, mantén activado Email y desactiva el registro público de nuevos usuarios una vez creado el tuyo.
+4. `config.js` ya contiene la URL y la clave publicable proporcionadas; nunca añadas aquí tu contraseña.
+5. Publica el contenido de esta carpeta en tu GitHub Pages. Entra con tu correo y contraseña; no hace falta SMTP para login.
 
-```js
-window.COCKPIT_CONFIG = {
-  supabaseUrl: 'https://TU-PROYECTO.supabase.co',
-  supabasePublishableKey: 'TU_CLAVE_PUBLICABLE_O_ANON'
-};
-```
-
-5. Publica de nuevo los archivos en GitHub. Recarga la página y utiliza tu email para acceder.
-
-**No coloques nunca una `service_role`, `secret key` ni claves privadas en `config.js`**. Es un archivo público. La seguridad de los datos depende de Auth y RLS. No desactives las políticas SQL.
-
-El modo Supabase empieza vacío: no inserta automáticamente los datos ficticios. La importación JSON está prevista solamente para la demo local.
+Las tablas mantienen políticas RLS para que solo tú accedas a tus registros. La aplicación no permite registro público.
 
 ## Qué pasa al convertir una oportunidad ganada
 

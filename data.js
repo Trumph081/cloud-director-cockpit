@@ -93,10 +93,13 @@ export class CockpitStore {
     })]));
     return this.data;
   }
-  async login(email) {
+  async login(email,password) {
     if(this.mode!=='supabase') throw Error('Modo demostración.');
-    const {error}=await this.client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});
+    const {data,error}=await this.client.auth.signInWithPassword({email,password});
     if(error) throw error;
+    if(!data.session) throw Error('No se ha podido iniciar sesión.');
+    this.session=data.session;
+    await this.load();
   }
   async logout(){if(this.client){const {error}=await this.client.auth.signOut();if(error)throw error;this.session=null;this.data=null;}}
   async save(table,record) {
